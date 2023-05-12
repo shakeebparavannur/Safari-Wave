@@ -47,7 +47,7 @@ namespace Safari_Wave.Repository
             var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == id);
             if (booking == null)
             {
-                throw new notf("Not Found");
+                throw new Exception("Not Found");
             }
             booking.Status = bookingUpdate.Status;
             await _context.SaveChangesAsync();
