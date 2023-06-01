@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Safari_Wave.Models;
 using Safari_Wave.Repository;
 using Safari_Wave.Repository.Interface;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -18,6 +20,14 @@ namespace Safari_Wave
 
 
             // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+
+                });
+            });
             builder.Services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -96,12 +106,24 @@ namespace Safari_Wave
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "coverImage")),
+                RequestPath = "/coverImage"
+            });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Image")),
+                RequestPath = "/Image"
+            });
 
             app.UseHttpsRedirection();
+            app.UseCors();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
+            
 
             app.MapControllers();
 

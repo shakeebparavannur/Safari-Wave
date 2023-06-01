@@ -25,9 +25,11 @@ public partial class UserDatum
 
     public bool? IsActive { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; } = new List<Booking>();
+    public string? Otp { get; set; }
 
-    public virtual ICollection<Cancellation> Cancellations { get; } = new List<Cancellation>();
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<Review> Reviews { get; } = new List<Review>();
+    public virtual ICollection<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
+
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 }

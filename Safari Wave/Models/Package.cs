@@ -37,11 +37,11 @@ public partial class Package
 
     public string? Image4 { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; } = new List<Booking>();
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<Gallery> Galleries { get; } = new List<Gallery>();
+    public virtual ICollection<Gallery> Galleries { get; set; } = new List<Gallery>();
 
-    public virtual ICollection<Review> Reviews { get; } = new List<Review>();
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    public virtual ICollection<Team> Teams { get; } = new List<Team>();
+    public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 }

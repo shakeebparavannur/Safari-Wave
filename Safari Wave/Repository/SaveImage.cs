@@ -16,7 +16,7 @@ namespace Safari_Wave.Repository
         {
             if (image == null)
             {
-                return null;
+                throw new ArgumentException("Image file is required");
             }
 
             var ext = Path.GetExtension(image.FileName);

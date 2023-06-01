@@ -11,6 +11,9 @@ using System.Security.AccessControl;
 using System.Security.Claims;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace Safari_Wave.Repository
 {
@@ -63,17 +66,13 @@ namespace Safari_Wave.Repository
             var user =await _context.UserData.FirstOrDefaultAsync(u=>u.UserName.ToLower()==login.Username.ToLower());
             
             
-            if(user == null)
+            if(user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
-                throw new Exception("Invalid Username or password");
+                return null;
             }
-            if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+            if (user.IsActive==false)
             {
-                throw new Exception("Invalid Username or password");
-            }
-            if (user.IsActive == false)
-            {
-                throw new Exception("You account has been blocked");
+                return null;
             }
             var userDto = _mapper.Map<UserDTO>(user);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -89,13 +88,28 @@ namespace Safari_Wave.Repository
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);  
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
                 Token = tokenHandler.WriteToken(token),
                 User = userDto
             };
             return loginResponseDTO;
+        }
+        private string GenerateOtp()
+        {
+            Random random = new Random();
+            int otp = random.Next(1000, 9999);
+            return otp.ToString();
+        }
+        private void sendOTP(string phoneNumber,string otp)
+        {
+            TwilioClient.Init("AC048701c16a7786f1a73bc91570dcf0a6", "c28a111cdb752528341db49082d64e76");
+            var message = MessageResource.Create(
+                body: $"your otp is : {otp}",
+                from: new PhoneNumber("9605896100"),
+                to: new PhoneNumber(phoneNumber)
+                );
         }
         public async Task<UserDatum> Register(CreateUserDTO userDTO)
         {
@@ -112,8 +126,9 @@ namespace Safari_Wave.Repository
 
             };
             userDatum.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password,10);
+            string otp = GenerateOtp();
             
-             _context.UserData.Add(userDatum);
+            _context.UserData.Add(userDatum);
             await _context.SaveChangesAsync();
             userDatum.Password = "";
             return userDatum;

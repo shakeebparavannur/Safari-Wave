@@ -31,13 +31,14 @@ namespace Safari_Wave.Controllers
             try
             {
                 var LoginResponse = await _userManagement.Login(login);
-                if (LoginResponse.User == null || string.IsNullOrEmpty(LoginResponse.Token))
+                if (LoginResponse == null)
                 {
                     response.StatusCode = HttpStatusCode.BadRequest;
                     response.IsSuccess = false;
                     response.ErrorMessages.Add("Username or Password is Incorrect");
                     return BadRequest(response);
                 }
+
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
@@ -45,7 +46,7 @@ namespace Safari_Wave.Controllers
                     SameSite = SameSiteMode.Strict,
                     Secure = true
                 };
-                Response.Cookies.Append("jwt",LoginResponse.Token, cookieOptions);
+                Response.Cookies.Append("jwt", LoginResponse.Token, cookieOptions);
 
                 response.StatusCode = HttpStatusCode.OK;
                 response.IsSuccess = true;
@@ -57,6 +58,7 @@ namespace Safari_Wave.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] CreateUserDTO createUser)
         {
@@ -74,6 +76,14 @@ namespace Safari_Wave.Controllers
                 response.StatusCode = HttpStatusCode.BadRequest;
                 response.IsSuccess = false;
                 response.ErrorMessages.Add("Email already regsitered");
+                return BadRequest(response);
+            }
+            bool ifNumberUnique = _userManagement.IsUniquePhonenumber(createUser.PhoneNo);
+            if (!ifNumberUnique)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.IsSuccess = false;
+                response.ErrorMessages.Add("Phone number already exist");
                 return BadRequest(response);
             }
             var user = await _userManagement.Register(createUser);

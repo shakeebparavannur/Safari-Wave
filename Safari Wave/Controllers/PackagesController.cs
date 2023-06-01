@@ -36,7 +36,7 @@ namespace Safari_Wave.Controllers
             }
             return  Ok(packages);
         }
-        [Authorize]
+        //[Authorize]
         [HttpGet("package/{id}",Name ="GetPackageById")]
         public async Task< ActionResult> GetPackageById(int id)
         {

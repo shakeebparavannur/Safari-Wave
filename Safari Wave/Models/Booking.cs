@@ -23,9 +23,9 @@ public partial class Booking
 
     public string Payment { get; set; } = null!;
 
-    public virtual ICollection<Cancellation> Cancellations { get; } = new List<Cancellation>();
+    public virtual ICollection<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
 
-    public virtual ICollection<ConfirmedBooking> ConfirmedBookings { get; } = new List<ConfirmedBooking>();
+    public virtual ICollection<ConfirmedBooking> ConfirmedBookings { get; set; } = new List<ConfirmedBooking>();
 
     public virtual Package Package { get; set; } = null!;
 

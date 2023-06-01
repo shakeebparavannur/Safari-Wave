@@ -220,6 +220,9 @@ public partial class SafariWaveContext : DbContext
             entity.Property(e => e.IsActive)
                 .IsRequired()
                 .HasDefaultValueSql("((1))");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(5)
+                .HasColumnName("OTP");
             entity.Property(e => e.PhoneNo)
                 .HasColumnType("numeric(18, 0)")
                 .HasColumnName("Phone No");
