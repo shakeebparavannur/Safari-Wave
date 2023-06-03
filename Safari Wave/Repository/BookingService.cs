@@ -54,6 +54,8 @@ namespace Safari_Wave.Repository
             var bookingDto = _mapper.Map<BookingResponseDTO>( booking);
             return bookingDto;
         }
+       
+
 
         public async Task<BookingResponseDTO> CancelBooking(string user,int id)
         {

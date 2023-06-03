@@ -25,7 +25,7 @@ public partial class UserDatum
 
     public bool? IsActive { get; set; }
 
-    public string? Otp { get; set; }
+    public string? Otp { get; set; } = null;
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

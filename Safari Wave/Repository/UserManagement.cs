@@ -24,6 +24,9 @@ namespace Safari_Wave.Repository
         private readonly SafariWaveContext _context;
         private readonly IMapper _mapper;
         private string secretkey;
+        private const string TwilioAccountSid = "AC048701c16a7786f1a73bc91570dcf0a6";
+        private const string TwilioAuthToken = "d8efd7de8290347658447d339c38423b";
+        private const string TwilioPhoneNumber = "9605896100";
 
         public UserManagement(SafariWaveContext context,IConfiguration configuration, IMapper mapper)
         {
@@ -49,7 +52,7 @@ namespace Safari_Wave.Repository
             }
             return false;
         }
-        public bool IsUniquePhonenumber(int phoneNumber)
+        public bool IsUniquePhonenumber(decimal phoneNumber)
         {
             var user = _context.UserData.FirstOrDefault(x=>x.PhoneNo == phoneNumber);
             if(user == null)
@@ -58,8 +61,14 @@ namespace Safari_Wave.Repository
             }
             return false;
         }
-        
-        
+        private string GenerateOTP()
+        {
+            // Generate a random 6-digit OTP
+            Random random = new Random();
+            return random.Next(100000, 999999).ToString();
+        }
+
+
 
         public async Task<LoginResponseDTO> Login(Login login)
         {
@@ -96,21 +105,7 @@ namespace Safari_Wave.Repository
             };
             return loginResponseDTO;
         }
-        private string GenerateOtp()
-        {
-            Random random = new Random();
-            int otp = random.Next(1000, 9999);
-            return otp.ToString();
-        }
-        private void sendOTP(string phoneNumber,string otp)
-        {
-            TwilioClient.Init("AC048701c16a7786f1a73bc91570dcf0a6", "c28a111cdb752528341db49082d64e76");
-            var message = MessageResource.Create(
-                body: $"your otp is : {otp}",
-                from: new PhoneNumber("9605896100"),
-                to: new PhoneNumber(phoneNumber)
-                );
-        }
+        
         public async Task<UserDatum> Register(CreateUserDTO userDTO)
         {
             UserDatum userDatum = new UserDatum()
@@ -126,10 +121,15 @@ namespace Safari_Wave.Repository
 
             };
             userDatum.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password,10);
-            string otp = GenerateOtp();
+            userDatum.Role = "user";
+            
+            
             
             _context.UserData.Add(userDatum);
             await _context.SaveChangesAsync();
+
+           
+
             userDatum.Password = "";
             return userDatum;
             
@@ -167,6 +167,11 @@ namespace Safari_Wave.Repository
             await _context.SaveChangesAsync();
             var userDto = _mapper.Map<UserDTO>(user);
             return userDto;
+        }
+
+        public Task<bool> VerifyOtp(string username, string otp)
+        {
+            throw new NotImplementedException();
         }
     }
 }

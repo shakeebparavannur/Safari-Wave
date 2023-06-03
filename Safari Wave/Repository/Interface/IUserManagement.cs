@@ -8,12 +8,14 @@ namespace Safari_Wave.Repository.Interface
     {
        bool IsUniqueUser(string username);
        bool IsUniqueEmail(string email);
-       bool IsUniquePhonenumber(int phonenumber);
+       bool IsUniquePhonenumber(decimal phonenumber);
        Task<LoginResponseDTO> Login(Login login);
        Task<UserDatum>Register(CreateUserDTO createUser);
        Task<IEnumerable<UserDTO>> GetAllUsers();
        Task <UserDTO> BlockUser (string  username,bool isActive);
        Task<UserDTO> EditUser(string username, UpdateUserDTO updateUser);
+        Task<bool> VerifyOtp(string username,string otp);
+
 
     }
 }

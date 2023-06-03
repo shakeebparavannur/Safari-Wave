@@ -7,7 +7,7 @@
         public string Email { get; set; } = null!;
         public decimal PhoneNo { get; set; }
         public string Address { get; set; } = null!;
-        public int Pincode { get; set; }
+        public decimal Pincode { get; set; }
         public string State { get; set; } = null!;
         public string Role { get; set; } = null!;
         public bool IsActive { get; set; } = true;
