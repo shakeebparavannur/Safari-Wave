@@ -24,15 +24,15 @@ namespace Safari_Wave.Repository
         private readonly SafariWaveContext _context;
         private readonly IMapper _mapper;
         private string secretkey;
-        private const string TwilioAccountSid = "AC048701c16a7786f1a73bc91570dcf0a6";
-        private const string TwilioAuthToken = "d8efd7de8290347658447d339c38423b";
-        private const string TwilioPhoneNumber = "9605896100";
+        private readonly SMSService _smsService;
+        
 
-        public UserManagement(SafariWaveContext context,IConfiguration configuration, IMapper mapper)
+        public UserManagement(SafariWaveContext context,IConfiguration configuration, IMapper mapper,SMSService smsService)
         {
             _context = context;
             secretkey = configuration.GetValue<string>("Jwt:Key");
             _mapper = mapper;
+            _smsService = smsService;
         }
         public bool IsUniqueUser(string username)
         {
@@ -120,9 +120,16 @@ namespace Safari_Wave.Repository
                 
 
             };
+            
             userDatum.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password,10);
             userDatum.Role = "user";
-            
+            var otp = _smsService.GenerateOTP();
+            var smsSent = await _smsService.SendOTPSMS(userDTO.PhoneNo, otp);
+            if (!smsSent)
+            {
+                throw new Exception("Error sending in otp");
+            }
+            userDatum.Otp = otp;
             
             
             _context.UserData.Add(userDatum);

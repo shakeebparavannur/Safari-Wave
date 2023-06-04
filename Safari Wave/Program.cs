@@ -91,6 +91,14 @@ namespace Safari_Wave
                     }
                 });
             });
+            builder.Services.AddSingleton<SMSService>(provider =>
+            {
+                var accountSid = builder.Configuration["Twilio:Sid"];
+                var authToken = builder.Configuration["Twilio:Token"];
+                var fromNumber = builder.Configuration["Twilio:Number"];
+
+                return new SMSService(accountSid, authToken, fromNumber);
+            });
             builder.Services.AddScoped<IPackageManagement, PackageManagement>();
             builder.Services.AddScoped<IUserManagement, UserManagement>();
             builder.Services.AddScoped<IBookingSevice, BookingService>();

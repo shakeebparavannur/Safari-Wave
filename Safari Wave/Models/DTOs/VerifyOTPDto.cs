@@ -1,8 +1,5 @@
-﻿namespace Safari_Wave.Models.DTOs
+﻿public class VerifyOTPDTO
 {
-    public class VerifyOTPDto
-    {
-        public string UserId { get; set; }
-        public string OTP { get; set; }
-    }
+    public decimal PhoneNo { get; set; }
+    public string Otp { get; set; }
 }

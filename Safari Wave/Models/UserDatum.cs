@@ -25,7 +25,13 @@ public partial class UserDatum
 
     public bool? IsActive { get; set; }
 
-    public string? Otp { get; set; } = null;
+    public string? Otp { get; set; }
+
+    public bool IsOtpVerified { get; set; }
+
+    public DateTime? OtpExpirationTime { get; set; }
+
+    public bool IsEmailVerified { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
