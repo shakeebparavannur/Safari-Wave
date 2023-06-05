@@ -169,5 +169,21 @@ namespace Safari_Wave.Controllers
             response.Result = updatedUser;
             return Ok(response);
         }
+        [HttpPost("verify")]
+        public async Task <IActionResult> VerifyOtp([FromBody]VerifyOTPDTO verifyOtp)
+        {
+            var isOtpVerified = await _userManagement.VerifyOtp(verifyOtp.PhoneNo.ToString(), verifyOtp.Otp);
+            if (!isOtpVerified)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.IsSuccess = false;
+                response.ErrorMessages.Add("Invalid OTP");
+                return BadRequest(response);
+            }
+            response.StatusCode = HttpStatusCode.OK;
+            response.IsSuccess = true;
+            response.Result = "Otp is verified";
+            return Ok(response);
+        }
     }
 }

@@ -10,6 +10,8 @@
         public decimal Pincode { get; set; }
         public string State { get; set; } = null!;
         public string Role { get; set; } = null!;
+        public bool IsOtpVerified { get; set; }
+        public bool IsEmailVerified { get; set; }
         public bool IsActive { get; set; } = true;
     }
 }

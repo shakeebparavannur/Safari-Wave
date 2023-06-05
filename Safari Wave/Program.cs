@@ -95,10 +95,12 @@ namespace Safari_Wave
             {
                 var accountSid = builder.Configuration["Twilio:Sid"];
                 var authToken = builder.Configuration["Twilio:Token"];
-                var fromNumber = builder.Configuration["Twilio:Number"];
+                var verifySid = builder.Configuration["Twilio:verifySid"];
+                var logger = provider.GetRequiredService<ILogger<SMSService>>();
 
-                return new SMSService(accountSid, authToken, fromNumber);
+                return new SMSService(accountSid, authToken, logger, verifySid);
             });
+
             builder.Services.AddScoped<IPackageManagement, PackageManagement>();
             builder.Services.AddScoped<IUserManagement, UserManagement>();
             builder.Services.AddScoped<IBookingSevice, BookingService>();

@@ -1,6 +1,10 @@
 ﻿using Twilio.Types;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using Microsoft.Extensions.Logging;
+using Serilog.Core;
+using System.Drawing.Printing;
+using Twilio.Rest.Verify.V2.Service;
 
 namespace Safari_Wave.Repository
 {
@@ -8,13 +12,19 @@ namespace Safari_Wave.Repository
     {
         private readonly string _accountSid;
         private readonly string _authToken;
-        private readonly string _fromNumber;
+       
+        private readonly ILogger<SMSService> _logger;
+        private readonly string _verifySid;
+        
 
-        public SMSService(string accountSid, string authToken, string fromNumber)
+        public SMSService(string accountSid, string authToken,  ILogger<SMSService> logger,string verifySid)
         {
             _accountSid = accountSid;
             _authToken = authToken;
-            _fromNumber = fromNumber;
+            _logger = logger;
+            _verifySid = verifySid;
+           
+
         }
         public string GenerateOTP()
         {
@@ -22,25 +32,47 @@ namespace Safari_Wave.Repository
             var random = new Random();
             return random.Next(10000, 99999).ToString();
         }
-        public async Task<bool> SendOTPSMS(decimal phoneNumber, string otp)
+        public async Task<string> SendOTPSMS(decimal phoneNumber)
         {
             try
             {
                 TwilioClient.Init(_accountSid, _authToken);
 
-                 var message = await MessageResource.CreateAsync(
-                    body: $"Your OTP is {otp}",
-                    from: new PhoneNumber(_fromNumber),
-                    to: new PhoneNumber($"+91{phoneNumber}")
+                 var message = await VerificationResource.CreateAsync(
+
+                    to:$"+91{phoneNumber}",
+                    channel:"sms",
+                    pathServiceSid:_verifySid
                 );
 
-                return true;
+                return  message.Sid;
             }
             catch (Exception ex)
             {
-                
+
                 // Handle exception/log error
-                //throw Exception(ex.Message);
+                _logger.LogError("Error in sending sms" + ex.Message);
+                
+                return null;
+            }
+        }
+        public async Task<bool> CheckVerification(string phonenumber, string otp, string verificationSid)
+        {
+            try
+            {
+                var verificationCheck = await VerificationCheckResource.CreateAsync(
+                    to: phonenumber,
+                    code: otp,
+                    pathServiceSid: _verifySid,
+                    verificationSid: verificationSid
+
+                );
+
+                return verificationCheck.Status == "approved";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error checking verification: " + ex.Message);
                 return false;
             }
         }

@@ -25,7 +25,7 @@ public partial class UserDatum
 
     public bool? IsActive { get; set; }
 
-    public string? Otp { get; set; }
+    public string? VerificationSid { get; set; }
 
     public bool IsOtpVerified { get; set; }
 

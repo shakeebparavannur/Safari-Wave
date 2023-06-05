@@ -61,13 +61,7 @@ namespace Safari_Wave.Repository
             }
             return false;
         }
-        private string GenerateOTP()
-        {
-            // Generate a random 6-digit OTP
-            Random random = new Random();
-            return random.Next(100000, 999999).ToString();
-        }
-
+        
 
 
         public async Task<LoginResponseDTO> Login(Login login)
@@ -117,26 +111,19 @@ namespace Safari_Wave.Repository
                 Address = userDTO.Address,
                 Pincode = userDTO.Pincode,
                 State = userDTO.State,
-                
 
             };
             
             userDatum.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password,10);
             userDatum.Role = "user";
-            var otp = _smsService.GenerateOTP();
-            var smsSent = await _smsService.SendOTPSMS(userDTO.PhoneNo, otp);
-            if (!smsSent)
-            {
-                throw new Exception("Error sending in otp");
-            }
-            userDatum.Otp = otp;
+            
+            var smsSent = await _smsService.SendOTPSMS(userDTO.PhoneNo) ?? throw new Exception("Error sending in otp");
+            userDatum.VerificationSid = smsSent;
+            userDatum.IsOtpVerified = false;
             
             
             _context.UserData.Add(userDatum);
             await _context.SaveChangesAsync();
-
-           
-
             userDatum.Password = "";
             return userDatum;
             
@@ -176,9 +163,22 @@ namespace Safari_Wave.Repository
             return userDto;
         }
 
-        public Task<bool> VerifyOtp(string username, string otp)
+        public async Task<bool> VerifyOtp(string phoneNumber, string otp)
         {
-            throw new NotImplementedException();
+           var user = await _context.UserData.FirstOrDefaultAsync(u=>u.PhoneNo.ToString()==phoneNumber&& u.IsOtpVerified== false);
+            if (user == null)
+            {
+                return false;
+            }
+            var isVerified = await _smsService.CheckVerification(phoneNumber, otp, user.VerificationSid);
+            if (isVerified)
+            {
+                user.IsOtpVerified = true;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+
         }
     }
 }
