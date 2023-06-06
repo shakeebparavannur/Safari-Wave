@@ -23,7 +23,7 @@ namespace Safari_Wave.Repository
         public async Task<BookingResponseDTO> BookingPackage(string username, CreateBookingDTO booking)
         {
             var package = _context.Packages.Find(booking.PackageId);
-            decimal amount = package.PricePerHead * booking.NoOfPerson;
+            decimal amount = package.OfferPrice * booking.NoOfPerson;
 
 
             Booking booking1 = new Booking()

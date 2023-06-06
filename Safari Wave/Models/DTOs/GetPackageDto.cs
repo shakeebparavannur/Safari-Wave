@@ -18,6 +18,7 @@ namespace Safari_Wave.Models.DTOs
 
         public string? Facilities { get; set; }
         public decimal PricePerHead { get; set; }
+        public decimal OfferPrice { get; set; }
         public int MinNoOfPerson { get; set; }
 
         public string? Type { get; set; }
