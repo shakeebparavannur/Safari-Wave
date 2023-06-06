@@ -16,7 +16,11 @@ namespace Safari_Wave.Models.DTOs
         public string? Facilities { get; set; }
         [Required(ErrorMessage = "You need to enter a price")]
         public decimal PricePerHead { get; set; }
+        [Required(ErrorMessage = "You need to enter a price")]
+        public decimal OfferPrice { get; set; }
+
         [Required(ErrorMessage = "Enter the number of person allowed")]
+
         public int MinNoOfPerson { get; set; }
         public string? Type { get; set; }
         public string? Country { get; set; }

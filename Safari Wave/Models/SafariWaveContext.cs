@@ -35,7 +35,7 @@ public partial class SafariWaveContext : DbContext
 
     public virtual DbSet<UserDatum> UserData { get; set; }
 
-    
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
@@ -139,6 +139,7 @@ public partial class SafariWaveContext : DbContext
             entity.Property(e => e.Location).HasMaxLength(50);
             entity.Property(e => e.MinNoOfPerson).HasColumnName("Min No of Person");
             entity.Property(e => e.NoOfCustomers).HasColumnName("No of Customers");
+            entity.Property(e => e.OfferPrice).HasColumnType("money");
             entity.Property(e => e.PricePerHead)
                 .HasColumnType("money")
                 .HasColumnName("Price per Head");

@@ -37,6 +37,8 @@ public partial class Package
 
     public string? Image4 { get; set; }
 
+    public decimal OfferPrice { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<Gallery> Galleries { get; set; } = new List<Gallery>();

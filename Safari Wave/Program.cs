@@ -9,6 +9,8 @@ using Safari_Wave.Repository.Interface;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Safari_Wave
 {
@@ -27,6 +29,14 @@ namespace Safari_Wave
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 
                 });
+            });
+            // Add session configuration
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                // Configure other session options
             });
             builder.Services.AddAuthentication(x =>
             {
@@ -100,7 +110,7 @@ namespace Safari_Wave
 
                 return new SMSService(accountSid, authToken, logger, verifySid);
             });
-
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IPackageManagement, PackageManagement>();
             builder.Services.AddScoped<IUserManagement, UserManagement>();
             builder.Services.AddScoped<IBookingSevice, BookingService>();
@@ -129,6 +139,7 @@ namespace Safari_Wave
 
             app.UseHttpsRedirection();
             app.UseCors();
+            app.UseSession();
 
             app.UseAuthentication();
 
