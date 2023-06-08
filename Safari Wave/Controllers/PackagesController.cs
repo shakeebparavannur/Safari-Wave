@@ -113,7 +113,16 @@ namespace Safari_Wave.Controllers
             return Ok(packages);
         }
         [HttpGet("feutures")]
-        public as
+        public async Task<IActionResult> FeturedPackages()
+        {
+            var feturedpackages = await _packageManagement.FeturedPackages();
+            if (feturedpackages == null)
+            {
+                return NotFound();
+            }
+            return Ok(feturedpackages);
+
+        }
         
     }
 }
