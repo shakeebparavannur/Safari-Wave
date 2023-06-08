@@ -35,7 +35,7 @@ public partial class SafariWaveContext : DbContext
 
     public virtual DbSet<UserDatum> UserData { get; set; }
 
-   
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>

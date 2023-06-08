@@ -22,6 +22,9 @@ namespace Safari_Wave.Models.DTOs
         [Required(ErrorMessage = "Enter the number of person allowed")]
 
         public int MinNoOfPerson { get; set; }
+        public bool? IsAvailable { get; set; }
+
+        public bool? IsFeatured { get; set; }
         public string? Type { get; set; }
         public string? Country { get; set; }
         public IFormFile? CoverImage { get; set; }

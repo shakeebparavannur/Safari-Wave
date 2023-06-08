@@ -58,6 +58,17 @@ namespace Safari_Wave.Repository
             return true;
         }
 
+        public async Task<IEnumerable<GetPackageDto>> FeturedPackages()
+        {
+            var feutPackage =await _context.Packages.Where(p => p.IsFeatured == true).ToListAsync();
+            if (feutPackage == null)
+            {
+                return null;
+            }
+            var feutPackageDto = _mapper.Map<List<GetPackageDto>>(feutPackage);
+            return feutPackageDto;
+        }
+
         public async Task<IEnumerable<GetPackageDto>> GetFilteredPackage(FilterPackage filterPackage)
         {
             var packages =await _context.Packages.ToListAsync();

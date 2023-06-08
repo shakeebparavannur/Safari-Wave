@@ -15,6 +15,7 @@ namespace Safari_Wave.Repository.Interface
         Task<GetPackageDto> UpdatePackage(int id,CreatePackageDto updatePackageDto);
         bool DeletePackage(int id);
         Task<IEnumerable<GetPackageDto>> GetFilteredPackage(FilterPackage filterPackage);
+        Task<IEnumerable<GetPackageDto>> FeturedPackages();
 
 
 

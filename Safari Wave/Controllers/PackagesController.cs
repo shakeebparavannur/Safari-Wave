@@ -112,5 +112,8 @@ namespace Safari_Wave.Controllers
             }
             return Ok(packages);
         }
+        [HttpGet("feutures")]
+        public as
+        
     }
 }

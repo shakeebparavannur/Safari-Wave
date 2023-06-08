@@ -39,6 +39,10 @@ public partial class Package
 
     public decimal OfferPrice { get; set; }
 
+    public bool? IsAvailable { get; set; }
+
+    public bool? IsFeatured { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<Gallery> Galleries { get; set; } = new List<Gallery>();
