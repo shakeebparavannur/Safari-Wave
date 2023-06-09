@@ -175,10 +175,7 @@ namespace Safari_Wave.Repository
                 return false;
             }
             var userDatum = JsonConvert.DeserializeObject<UserDatum>(userDataString);
-            //if (user == null)
-            //{
-            //    return false;
-            //}
+           
             var isVerified = await _smsService.CheckVerification(phoneNumber, otp, userDatum.VerificationSid);
             if (isVerified)
             {

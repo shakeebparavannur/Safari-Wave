@@ -42,7 +42,7 @@ namespace Safari_Wave.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("{id}")]
+        [Route("booking/{id}")]
         public async Task<ActionResult> GetBookingById(int id)
         {
             try
@@ -57,7 +57,7 @@ namespace Safari_Wave.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("user")]
+        [Route("GetBookings")]
         public async Task<ActionResult> GetBookings() 
         {
             try

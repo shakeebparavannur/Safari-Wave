@@ -34,8 +34,8 @@ namespace Safari_Wave
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.HttpOnly = false;
+                options.Cookie.SameSite = SameSiteMode.None;
                 // Configure other session options
             });
             builder.Services.AddAuthentication(x =>
