@@ -26,12 +26,7 @@ namespace Safari_Wave.Repository
            
 
         }
-        public string GenerateOTP()
-        {
-            // Generate a random 6-digit OTP
-            var random = new Random();
-            return random.Next(10000, 99999).ToString();
-        }
+      
         public async Task<string> SendOTPSMS(decimal phoneNumber)
         {
             try

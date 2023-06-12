@@ -96,6 +96,7 @@ namespace Safari_Wave.Controllers
             }
             response.StatusCode = HttpStatusCode.OK;
             response.IsSuccess = true;
+            response.Result= user;
             return Ok(response);
 
 
@@ -172,7 +173,7 @@ namespace Safari_Wave.Controllers
         [HttpPost("verify")]
         public async Task <IActionResult> VerifyOtp([FromBody]VerifyOTPDTO verifyOtp)
         {
-            var isOtpVerified = await _userManagement.VerifyOtp(verifyOtp.PhoneNo.ToString(), verifyOtp.Otp);
+            var isOtpVerified = await _userManagement.VerifyOtp(verifyOtp.PhoneNo.ToString(), verifyOtp.Otp,verifyOtp.UserDatum);
             if (!isOtpVerified)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;

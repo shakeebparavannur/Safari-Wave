@@ -25,7 +25,7 @@ namespace Safari_Wave.Repository
     {
         private readonly SafariWaveContext _context;
         private readonly IMapper _mapper;
-        private string secretkey;
+        private readonly string secretkey;
         private readonly SMSService _smsService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -107,7 +107,7 @@ namespace Safari_Wave.Repository
         
         public async Task<UserDatum> Register(CreateUserDTO userDTO)
         {
-            UserDatum userDatum = new UserDatum()
+            UserDatum userDatum = new()
             {
                 UserName = userDTO.UserName,
                 FullName = userDTO.FullName,
@@ -116,12 +116,10 @@ namespace Safari_Wave.Repository
                 Address = userDTO.Address,
                 Pincode = userDTO.Pincode,
                 State = userDTO.State,
-
+                Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password, 10),
+                Role = "user"
             };
-            
-            userDatum.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password,10);
-            userDatum.Role = "user";
-            
+
             var smsSent = await _smsService.SendOTPSMS(userDTO.PhoneNo) ?? throw new Exception("Error sending in otp");
             userDatum.VerificationSid = smsSent;
             userDatum.IsOtpVerified = false;
@@ -167,26 +165,24 @@ namespace Safari_Wave.Repository
             return userDto;
         }
 
-        public async Task<bool> VerifyOtp(string phoneNumber, string otp)
-        {
-            var userDataString = _httpContextAccessor.HttpContext.Session.GetString("UserData");
-            if (string.IsNullOrEmpty(userDataString)) 
+            public async Task<bool> VerifyOtp(string phoneNumber, string otp,UserDatum userdata)
+            {
+                if(userdata == null)
             {
                 return false;
             }
-            var userDatum = JsonConvert.DeserializeObject<UserDatum>(userDataString);
            
-            var isVerified = await _smsService.CheckVerification(phoneNumber, otp, userDatum.VerificationSid);
-            if (isVerified)
-            {
-                userDatum.IsOtpVerified = true;
-                _context.UserData.Add(userDatum);
-                await _context.SaveChangesAsync();
-                _httpContextAccessor.HttpContext.Session.Remove("UserData");
-                return true;
-            }
-            return false;
+                var isVerified = await _smsService.CheckVerification(phoneNumber, otp, userdata.VerificationSid);
+                if (isVerified)
+                {
+                    userdata.IsOtpVerified = true;
+                    _context.UserData.Add(userdata);
+                    await _context.SaveChangesAsync();
+                    
+                    return true;
+                }
+                return false;
 
-        }
+            }
     }
 }

@@ -26,7 +26,10 @@ namespace Safari_Wave
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+               builder.WithOrigins("http://localhost:5173") // Update with your React app URL
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
 
                 });
             });
@@ -34,9 +37,12 @@ namespace Safari_Wave
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
+                options.Cookie.Name = "UserData";
                 options.Cookie.HttpOnly = false;
                 options.Cookie.SameSite = SameSiteMode.None;
-                // Configure other session options
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.IsEssential = true;
             });
             builder.Services.AddAuthentication(x =>
             {
@@ -140,6 +146,7 @@ namespace Safari_Wave
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseSession();
+            
 
             app.UseAuthentication();
 
