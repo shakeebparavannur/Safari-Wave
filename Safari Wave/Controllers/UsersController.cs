@@ -186,5 +186,38 @@ namespace Safari_Wave.Controllers
             response.Result = "Otp is verified";
             return Ok(response);
         }
+        [HttpPost("Admin")]
+        public async Task <IActionResult> AdminLogin([FromBody] Login login)
+        {
+            try
+            {
+                var LoginResponse = await _userManagement.AdminLogin(login);
+                if (LoginResponse == null)
+                {
+                    response.StatusCode = HttpStatusCode.BadRequest;
+                    response.IsSuccess = false;
+                    response.ErrorMessages.Add("Username or Password is Incorrect");
+                    return BadRequest(response);
+                }
+
+                //var cookieOptions = new CookieOptions
+                //{
+                //    HttpOnly = true,
+                //    Expires = DateTime.UtcNow.AddDays(7),
+                //    SameSite = SameSiteMode.Strict,
+                //    Secure = true
+                //};
+                //Response.Cookies.Append("jwt", LoginResponse.Token, cookieOptions);
+
+                response.StatusCode = HttpStatusCode.OK;
+                response.IsSuccess = true;
+                response.Result = LoginResponse;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

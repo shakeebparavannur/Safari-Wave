@@ -10,6 +10,7 @@ namespace Safari_Wave.Repository.Interface
        bool IsUniqueEmail(string email);
        bool IsUniquePhonenumber(decimal phonenumber);
        Task<LoginResponseDTO> Login(Login login);
+       Task<LoginResponseDTO> AdminLogin(Login login);
        Task<UserDatum>Register(CreateUserDTO createUser);
        Task<IEnumerable<UserDTO>> GetAllUsers();
        Task <UserDTO> BlockUser (string  username,bool isActive);

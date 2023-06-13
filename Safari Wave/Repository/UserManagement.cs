@@ -71,7 +71,7 @@ namespace Safari_Wave.Repository
 
         public async Task<LoginResponseDTO> Login(Login login)
         {
-            var user =await _context.UserData.FirstOrDefaultAsync(u=>u.UserName.ToLower()==login.Username.ToLower());
+            var user =await _context.UserData.FirstOrDefaultAsync(u=>u.UserName.ToLower()==login.Username.ToLower() &&u.Role=="user");
             
             
             if(user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
@@ -184,5 +184,42 @@ namespace Safari_Wave.Repository
                 return false;
 
             }
+
+        public async Task<LoginResponseDTO> AdminLogin(Login login)
+        {
+            var admin = await _context.UserData.FirstOrDefaultAsync(u => u.UserName.ToLower() == login.Username.ToLower() && u.Role=="admin" );
+
+
+            if (admin == null || !BCrypt.Net.BCrypt.Verify(login.Password, admin.Password))
+            {
+                return null;
+            }
+            if (admin.IsActive == false)
+            {
+                return null;
+            }
+            var userDto = _mapper.Map<UserDTO>(admin);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secretkey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name,admin.UserName),
+                    new Claim(ClaimTypes.Role,admin.Role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
+            {
+                Token = tokenHandler.WriteToken(token),
+                User = userDto
+            };
+            return loginResponseDTO;
+        }
     }
+    
 }
