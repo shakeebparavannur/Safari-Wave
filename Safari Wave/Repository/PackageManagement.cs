@@ -121,5 +121,25 @@ namespace Safari_Wave.Repository
             
         }
 
+        public async Task<GetPackageDto> UpdatePrice(int id, decimal price)
+        {
+            var pack = await _context.Packages.FirstOrDefaultAsync(x => x.PackId == id);
+            if (pack == null)
+            {
+                throw new FileNotFoundException("Package not Available");
+            }
+            if(price>=pack.PricePerHead)
+            {
+                throw new Exception("Price is above the maximum price");
+            }
+            if (price <= 0)
+            {
+                throw new Exception("Price must be a valid entry");
+            }
+            pack.OfferPrice = price;
+            await _context.SaveChangesAsync();
+            var packDto = _mapper.Map<GetPackageDto>(pack);
+            return packDto;
+        }
     }
 }

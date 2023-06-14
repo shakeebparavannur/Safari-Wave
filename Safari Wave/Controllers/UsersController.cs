@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Safari_Wave.Models;
 using Safari_Wave.Models.DTOs.Users;
 using Safari_Wave.Repository.Interface;
@@ -41,12 +42,12 @@ namespace Safari_Wave.Controllers
 
                 var cookieOptions = new CookieOptions
                 {
-                    HttpOnly = true,
+                    HttpOnly = false,
                     Expires = DateTime.UtcNow.AddDays(7),
-                    SameSite = SameSiteMode.Strict,
+                    SameSite = SameSiteMode.None,
                     Secure = true
                 };
-                Response.Cookies.Append("jwt", LoginResponse.Token, cookieOptions);
+                Response.Cookies.Append("jwtbackend", LoginResponse.Token, cookieOptions);
 
                 response.StatusCode = HttpStatusCode.OK;
                 response.IsSuccess = true;
@@ -94,6 +95,8 @@ namespace Safari_Wave.Controllers
                 response.ErrorMessages.Add("Error while registering");
                 return BadRequest(response);
             }
+            HttpContext.Session.SetString("UserDataBack", JsonConvert.SerializeObject(user));
+
             response.StatusCode = HttpStatusCode.OK;
             response.IsSuccess = true;
             response.Result= user;

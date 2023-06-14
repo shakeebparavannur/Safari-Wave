@@ -26,10 +26,10 @@ namespace Safari_Wave
             {
                 options.AddDefaultPolicy(builder =>
                 {
-               builder.WithOrigins("http://localhost:5173") // Update with your React app URL
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+                    builder.AllowAnyOrigin() // Update with your React app URL
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+
 
                 });
             });
@@ -37,11 +37,9 @@ namespace Safari_Wave
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
-                options.Cookie.Name = "UserData";
-                options.Cookie.HttpOnly = false;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+
+                options.Cookie.Name = "SafariWave";
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.Cookie.IsEssential = true;
             });
             builder.Services.AddAuthentication(x =>
@@ -121,7 +119,7 @@ namespace Safari_Wave
             builder.Services.AddScoped<IUserManagement, UserManagement>();
             builder.Services.AddScoped<IBookingSevice, BookingService>();
             builder.Services.AddScoped<IEnquiryService, EnquiryService>();
-            builder.Services.AddScoped<IReviewServices,ReviewService>();
+            builder.Services.AddScoped<IReviewServices, ReviewService>();
             builder.Services.AddScoped<SaveImage>();
 
             var app = builder.Build();
@@ -146,12 +144,12 @@ namespace Safari_Wave
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseSession();
-            
+
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-            
+
 
             app.MapControllers();
 

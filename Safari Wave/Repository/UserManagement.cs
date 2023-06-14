@@ -123,7 +123,7 @@ namespace Safari_Wave.Repository
             var smsSent = await _smsService.SendOTPSMS(userDTO.PhoneNo) ?? throw new Exception("Error sending in otp");
             userDatum.VerificationSid = smsSent;
             userDatum.IsOtpVerified = false;
-            _httpContextAccessor.HttpContext.Session.SetString("UserData",JsonConvert.SerializeObject(userDatum));
+            
             
             
             userDatum.Password = "";

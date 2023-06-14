@@ -123,6 +123,20 @@ namespace Safari_Wave.Controllers
             return Ok(feturedpackages);
 
         }
-        
+        [Authorize(Roles = "admin")]
+        [HttpPut("{id}/updateprize")]
+        public async Task<IActionResult> UpdatePrice(int id, [FromBody] decimal price)
+        {
+            try
+            {
+                var pack = await _packageManagement.UpdatePrice(id, price);
+                
+                return Ok(pack);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
