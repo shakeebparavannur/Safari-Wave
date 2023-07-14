@@ -107,6 +107,20 @@ namespace Safari_Wave.Repository
             return packagesDto;
 
         }
+
+        public async Task<GetPackageDto> UpdateFeture(int id, bool feture)
+        {
+            var package = await _context.Packages.FirstOrDefaultAsync(x=>x.PackId == id);
+            if(package == null)
+            {
+                throw new Exception("Item Not Found");
+            }
+            package.IsFeatured = feture;
+            await _context.SaveChangesAsync();
+            var packageDto = _mapper.Map<GetPackageDto>(package);
+            return packageDto;
+        }
+
         public async Task <GetPackageDto> UpdatePackage(int id,CreatePackageDto updatePackageDto)
         {
             var package = await _context.Packages.FirstOrDefaultAsync(x => x.PackId == id);

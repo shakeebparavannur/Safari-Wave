@@ -15,6 +15,7 @@ namespace Safari_Wave.Repository.Interface
         Task<IEnumerable<GetPackageDto>> GetFilteredPackage(FilterPackage filterPackage);
         Task<IEnumerable<GetPackageDto>> FeturedPackages();
         Task<GetPackageDto> UpdatePrice(int id,decimal price);
+        Task<GetPackageDto> UpdateFeture(int id,bool feture);
 
 
 

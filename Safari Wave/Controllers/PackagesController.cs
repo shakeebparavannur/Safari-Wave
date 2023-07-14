@@ -138,5 +138,20 @@ namespace Safari_Wave.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [Authorize(Roles = "admin")]
+        [HttpPut("Update Feuture Status")]
+        public async Task<IActionResult> UpdateFetureStatus(int id,bool feature)
+        {
+            try
+            {
+                var status = await _packageManagement.UpdateFeture(id, feature);
+                return Ok(status);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

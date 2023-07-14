@@ -24,7 +24,7 @@ namespace Safari_Wave.Models.DTOs
         public string? Type { get; set; }
 
         //public int? AdditionPricePerson { get; set; }
-
+        public bool? IsFeatured { get; set; }
         public int? NoOfCustomers { get; set; }
 
         public string? CoverImage { get; set; }

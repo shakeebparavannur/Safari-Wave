@@ -15,7 +15,7 @@ namespace Safari_Wave.Repository.Interface
        Task<IEnumerable<UserDTO>> GetAllUsers();
        Task <UserDTO> BlockUser (string  username,bool isActive);
        Task<UserDTO> EditUser(string username, UpdateUserDTO updateUser);
-        Task<bool> VerifyOtp(string phoneNumber,string otp,UserDatum userdata);
+       Task<bool> VerifyOtp(string phoneNumber,string otp,UserDatum userdata);
 
         //Task<bool> VerifyEmail(string email);
 

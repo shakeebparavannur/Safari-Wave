@@ -32,7 +32,10 @@ namespace Safari_Wave.Repository
                 PackageId = booking.PackageId,
                 DateOfTrip = booking.DateOfTrip,
                 NoOfPerson = booking.NoOfPerson,
-                Amount = amount
+                Amount = amount,
+                Payment = "pending",
+                Status = "booked"
+                
             };
             _context.Bookings.Add(booking1);
             await _context.SaveChangesAsync();
