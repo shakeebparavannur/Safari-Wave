@@ -28,7 +28,7 @@ namespace Safari_Wave.Controllers
         }
         [HttpPost("BookPackage")]
         [Authorize]
-       // [Route("BookPackage")]
+       
         public async Task<ActionResult> CreateBooking(CreateBookingDTO bookingData)
         {
             var currentUser = HttpContext.User.Identity.Name;

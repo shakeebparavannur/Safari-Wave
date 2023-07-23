@@ -7,7 +7,7 @@ namespace Safari_Wave.Repository.Interface
     public interface IPackageManagement
     {
         Task<IEnumerable<GetPackageDto>> GetPackages();
-        Task<GetPackageDto> GetPackageById(int id);
+        Task<Package> GetPackageById(int id);
         Task<IEnumerable<GetPackageDto>> GetPackageByName(string name);
         Task <GetPackageDto> CreatePackage(CreatePackageDto createPackageDto);
         Task<GetPackageDto> UpdatePackage(int id,CreatePackageDto updatePackageDto);

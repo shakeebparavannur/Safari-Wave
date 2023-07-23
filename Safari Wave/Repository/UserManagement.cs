@@ -23,6 +23,7 @@ namespace Safari_Wave.Repository
        
         
     {
+        private readonly ILogger<UserManagement> _logger;
         private readonly SafariWaveContext _context;
         private readonly IMapper _mapper;
         private readonly string secretkey;
@@ -31,13 +32,14 @@ namespace Safari_Wave.Repository
 
 
 
-        public UserManagement(SafariWaveContext context,IConfiguration configuration, IMapper mapper, SMSService smsService, IHttpContextAccessor httpContextAccessor)
+        public UserManagement(SafariWaveContext context,IConfiguration configuration, IMapper mapper, SMSService smsService, IHttpContextAccessor httpContextAccessor, ILogger<UserManagement> logger)
         {
             _context = context;
             secretkey = configuration.GetValue<string>("Jwt:Key");
             _mapper = mapper;
             _smsService = smsService;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
         public bool IsUniqueUser(string username)
         {
@@ -76,6 +78,7 @@ namespace Safari_Wave.Repository
             
             if(user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
+                _logger.LogError("UserName password mismatch");
                 return null;
             }
             if (user.IsActive==false)
