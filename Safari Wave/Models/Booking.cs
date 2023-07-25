@@ -14,6 +14,8 @@ public partial class Booking
     public int NoOfPerson { get; set; }
     public decimal Amount { get; set; }
     public string Payment { get; set; } = null!;
+    public string? StripePaymentIntentId { get; set; }
+    public string? ClientSecret { get; set; }
     public virtual ICollection<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
     public virtual ICollection<ConfirmedBooking> ConfirmedBookings { get; set; } = new List<ConfirmedBooking>();
     public virtual Package Package { get; set; } = null!;

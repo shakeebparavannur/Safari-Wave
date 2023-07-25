@@ -1,21 +1,12 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using Safari_Wave.Models;
 using Safari_Wave.Models.DTOs.Users;
 using Safari_Wave.Repository.Interface;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.AccessControl;
 using System.Security.Claims;
-using System.Security.Cryptography.Xml;
 using System.Text;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
-using Twilio.Types;
 
 namespace Safari_Wave.Repository
 {
@@ -129,7 +120,7 @@ namespace Safari_Wave.Repository
             
             
             
-            userDatum.Password = "";
+            //userDatum.Password = "";
             return userDatum;
             
 

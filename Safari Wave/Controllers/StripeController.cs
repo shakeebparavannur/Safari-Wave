@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Safari_Wave.Models;
 using Safari_Wave.Models.Stripe;
 using Safari_Wave.Repository.Interface;
+using Stripe;
+using System.Drawing.Printing;
+using System.Net;
 
 namespace Safari_Wave.Controllers
 {
@@ -9,16 +14,44 @@ namespace Safari_Wave.Controllers
     [ApiController]
     public class StripeController : ControllerBase
     {
-        private readonly IStripeAppService _stripeAppService;
-        public StripeController(IStripeAppService stripeAppService)
+        protected APIResponse response;
+        private readonly IConfiguration configuration;
+        private readonly SafariWaveContext context;
+        public StripeController(IConfiguration configuration,SafariWaveContext context)
         {
-            _stripeAppService = stripeAppService;
+            this.configuration = configuration;
+            this.context = context;
+            response = new();
         }
-        [HttpPost("customer/add")]
-        public async Task<ActionResult<StripeCustomer>> AddStripeCustomer([FromBody] AddStripeCustomer customer,CancellationToken ct)
+        [HttpPost]
+        public async Task <ActionResult<APIResponse>> MakePayment(int bookingId)
         {
-            StripeCustomer createdCustomer = await _stripeAppService.AddStripeCustomer(customer, ct);
-            return Ok(createdCustomer);
+            var booking = await context.Bookings.FirstOrDefaultAsync(b=>b.BookingId ==  bookingId);
+            if (booking == null || booking.Payment == "success")
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.IsSuccess = false;
+                return BadRequest(response);
+            }
+            StripeConfiguration.ApiKey = configuration["Stripe:SecretKey"];
+            decimal totalamount = booking.Amount;
+
+            PaymentIntentCreateOptions options = new ()
+            {
+                Amount = (long?)totalamount,
+                Currency = "usd",
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                {
+                    Enabled = true,
+                },
+            };
+            PaymentIntentService service = new();
+            PaymentIntent result = service.Create(options);
+            booking.StripePaymentIntentId = result.Id;
+            booking.ClientSecret = result.ClientSecret;
+            response.Result = booking;
+            response.StatusCode = HttpStatusCode.OK;
+            return Ok(response);
         }
     }
 }

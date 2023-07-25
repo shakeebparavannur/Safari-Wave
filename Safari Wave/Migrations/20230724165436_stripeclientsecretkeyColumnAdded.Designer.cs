@@ -12,15 +12,15 @@ using Safari_Wave.Models;
 namespace Safari_Wave.Migrations
 {
     [DbContext(typeof(SafariWaveContext))]
-    [Migration("20230410061531_change in enquiry table")]
-    partial class changeinenquirytable
+    [Migration("20230724165436_stripeclientsecretkeyColumnAdded")]
+    partial class stripeclientsecretkeyColumnAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -28,7 +28,16 @@ namespace Safari_Wave.Migrations
             modelBuilder.Entity("Safari_Wave.Models.Booking", b =>
                 {
                     b.Property<int>("BookingId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("money");
+
+                    b.Property<string>("ClientSecret")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
@@ -37,19 +46,25 @@ namespace Safari_Wave.Migrations
                         .HasColumnType("date")
                         .HasColumnName("Date_of_Trip");
 
+                    b.Property<int>("NoOfPerson")
+                        .HasColumnType("int")
+                        .HasColumnName("No_Of_Person");
+
                     b.Property<int>("PackageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Payment")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("payment");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -73,12 +88,12 @@ namespace Safari_Wave.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Comment")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("date");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -94,8 +109,39 @@ namespace Safari_Wave.Migrations
                     b.ToTable("Cancellation", (string)null);
                 });
 
+            modelBuilder.Entity("Safari_Wave.Models.ConfirmedBooking", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("money");
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("Confirmed_Booking", (string)null);
+                });
+
             modelBuilder.Entity("Safari_Wave.Models.Enquiry", b =>
                 {
+                    b.Property<int>("EnquiryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnquiryId"));
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -105,9 +151,11 @@ namespace Safari_Wave.Migrations
                         .HasColumnType("date")
                         .HasColumnName("Enquiry Date");
 
+                    b.Property<DateTime?>("LastTrackingDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Message")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -117,6 +165,11 @@ namespace Safari_Wave.Migrations
                     b.Property<decimal>("PhoneNo")
                         .HasColumnType("numeric(18, 0)")
                         .HasColumnName("Phone No");
+
+                    b.Property<string>("TrackingStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EnquiryId");
 
                     b.ToTable("Enquiry", (string)null);
                 });
@@ -149,10 +202,6 @@ namespace Safari_Wave.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PackId"));
 
-                    b.Property<int?>("AdditionPricePerson")
-                        .HasColumnType("int")
-                        .HasColumnName("Addition Price / Person");
-
                     b.Property<string>("Country")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -168,8 +217,7 @@ namespace Safari_Wave.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Facilities")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image1")
                         .HasColumnType("nvarchar(max)");
@@ -183,25 +231,35 @@ namespace Safari_Wave.Migrations
                     b.Property<string>("Image4")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsFeatured")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("MinNoOfPerson")
+                        .HasColumnType("int")
+                        .HasColumnName("Min No of Person");
+
                     b.Property<int?>("NoOfCustomers")
                         .HasColumnType("int")
                         .HasColumnName("No of Customers");
 
-                    b.Property<int>("NumberOfPerson")
-                        .HasColumnType("int")
-                        .HasColumnName("Number of Person");
+                    b.Property<decimal>("OfferPrice")
+                        .HasColumnType("money");
 
                     b.Property<string>("PackageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
+                    b.Property<decimal>("PricePerHead")
+                        .HasColumnType("money")
+                        .HasColumnName("Price per Head");
 
                     b.Property<string>("Type")
                         .HasMaxLength(50)
@@ -330,10 +388,17 @@ namespace Safari_Wave.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValueSql("((1))");
 
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOtpVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("OtpExpirationTime")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PhoneNo")
                         .HasColumnType("numeric(18, 0)")
@@ -353,6 +418,9 @@ namespace Safari_Wave.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("VerificationSid")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserName");
 
@@ -395,6 +463,17 @@ namespace Safari_Wave.Migrations
                     b.Navigation("Booking");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Safari_Wave.Models.ConfirmedBooking", b =>
+                {
+                    b.HasOne("Safari_Wave.Models.Booking", "Booking")
+                        .WithMany("ConfirmedBookings")
+                        .HasForeignKey("BookingId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Booking_ConfirmBook");
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Safari_Wave.Models.Gallery", b =>
@@ -460,6 +539,8 @@ namespace Safari_Wave.Migrations
             modelBuilder.Entity("Safari_Wave.Models.Booking", b =>
                 {
                     b.Navigation("Cancellations");
+
+                    b.Navigation("ConfirmedBookings");
                 });
 
             modelBuilder.Entity("Safari_Wave.Models.Package", b =>
