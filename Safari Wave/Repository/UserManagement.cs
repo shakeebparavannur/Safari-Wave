@@ -5,7 +5,7 @@ using Safari_Wave.Models;
 using Safari_Wave.Models.DTOs.Users;
 using Safari_Wave.Repository.Interface;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using System.Security.Claims;                                         
 using System.Text;
 
 namespace Safari_Wave.Repository
@@ -117,12 +117,9 @@ namespace Safari_Wave.Repository
             var smsSent = await _smsService.SendOTPSMS(userDTO.PhoneNo) ?? throw new Exception("Error sending in otp");
             userDatum.VerificationSid = smsSent;
             userDatum.IsOtpVerified = false;
-            
-            
-            
+
             //userDatum.Password = "";
             return userDatum;
-            
 
         }
         public async Task<IEnumerable<UserDTO>> GetAllUsers()

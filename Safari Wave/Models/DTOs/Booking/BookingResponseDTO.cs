@@ -10,6 +10,8 @@
         public string Status { get; set; } = "pending";
         public int NoOfPerson { get; set; }
         public decimal Amount { get; set; }
+        public string? StripePaymentIntentId { get; set; }
+        public string? ClientSecret { get; set; }
         public string Payment { get; set; } = "pending";
     }
 }

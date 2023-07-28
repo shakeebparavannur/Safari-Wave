@@ -35,7 +35,7 @@ namespace Safari_Wave.Repository
                 Amount = amount,
                 Payment = "pending",
                 Status = "booked"
-                
+               
             };
             _context.Bookings.Add(booking1);
             await _context.SaveChangesAsync();
