@@ -92,14 +92,14 @@ namespace Safari_Wave.Repository
             return bookingDto;
         }
 
-        public async Task<BookingResponseDTO> GetBookingPackageById(int id)
+        public async Task<BookingResponseIdDTO> GetBookingPackageById(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings.Include(p=>p.Package).Include(b=>b.User).FirstOrDefaultAsync(x=>x.BookingId==id);
             if (booking == null)
             {
                 return null;
             }
-            var bookingDto = _mapper.Map<BookingResponseDTO>(booking);
+            var bookingDto = _mapper.Map<BookingResponseIdDTO>(booking);
             return bookingDto;
         }
 

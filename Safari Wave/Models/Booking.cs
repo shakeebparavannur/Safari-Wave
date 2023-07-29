@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Safari_Wave.Models;
 
@@ -16,8 +17,12 @@ public partial class Booking
     public string Payment { get; set; } = null!;
     public string? StripePaymentIntentId { get; set; }
     public string? ClientSecret { get; set; }
+    [NotMapped]
     public virtual ICollection<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
+    [NotMapped]
     public virtual ICollection<ConfirmedBooking> ConfirmedBookings { get; set; } = new List<ConfirmedBooking>();
+    [NotMapped]
     public virtual Package Package { get; set; } = null!;
+    [NotMapped]
     public virtual UserDatum User { get; set; } = null!;
 }

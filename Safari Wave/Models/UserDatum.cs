@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Safari_Wave.Models;
 
@@ -32,10 +33,10 @@ public partial class UserDatum
     public DateTime? OtpExpirationTime { get; set; }
 
     public bool IsEmailVerified { get; set; }
-
+    [NotMapped]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
+    [NotMapped]
     public virtual ICollection<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
-
+    [NotMapped]
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 }

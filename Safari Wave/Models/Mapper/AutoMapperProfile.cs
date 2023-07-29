@@ -13,7 +13,7 @@ namespace Safari_Wave.Models.Mapper
         {
             CreateMap<Package, GetPackageDto>().ReverseMap();
             CreateMap<Package, CreatePackageDto>().ReverseMap();
-            //CreateMap<CreatePackageDto, Package>();
+            CreateMap<Booking,BookingResponseIdDTO>().ReverseMap();
             CreateMap<UserDTO,UserDatum>().ReverseMap();
             CreateMap<CreateUserDTO,UserDatum>().ReverseMap();
             CreateMap<UpdateUserDTO,UserDatum>().ReverseMap();

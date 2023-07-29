@@ -7,7 +7,7 @@ namespace Safari_Wave.Repository.Interface
     {
         Task <BookingResponseDTO> BookingPackage ( string username,CreateBookingDTO  booking);
         Task<IEnumerable<BookingResponseDTO>> GetBookings();
-        Task<BookingResponseDTO> GetBookingPackageById(int id);
+        Task<BookingResponseIdDTO> GetBookingPackageById(int id);
         Task <IEnumerable<BookingResponseDTO>> GetBookingByUser(string user);
         Task<BookingResponseDTO> BookingStatusUpdate(int id, BookingUpdateDTO bookingUpdate);
         Task<BookingResponseDTO> CancelBooking(string user,int id);
