@@ -78,13 +78,13 @@ namespace Safari_Wave.Repository
         }
         public async Task <Package> GetPackageById(int id)
         {
-            //var package = await _context.Packages.FirstOrDefaultAsync(x => x.PackId == id);
+            
             var package = await _context.Packages.Include(p => p.Bookings).Include(p=>p.Reviews).FirstOrDefaultAsync(x => x.PackId == id);
             if (package == null)
             {
                 return null;
             }
-            //var packageDto = _mapper.Map<GetPackageDto>(package);
+            
             return package;
         }
             public async Task<IEnumerable<GetPackageDto>> GetPackageByName(string name)

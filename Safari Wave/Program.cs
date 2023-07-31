@@ -10,7 +10,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
-
+using Newtonsoft.Json;
 
 namespace Safari_Wave
 {
@@ -64,11 +64,13 @@ namespace Safari_Wave
                 };
             });
             builder.Services.AddControllers().AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson(option =>
+                {
+                    option.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                }); ;
 
             builder.Services.AddAutoMapper(typeof(Program));
-            //builder.Services.AddControllersWithViews();
-            builder.Services.AddControllers();
+            
             builder.Services.AddDbContext<SafariWaveContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -120,6 +122,7 @@ namespace Safari_Wave
             builder.Services.AddScoped<IBookingSevice, BookingService>();
             builder.Services.AddScoped<IEnquiryService, EnquiryService>();
             builder.Services.AddScoped<IReviewServices, ReviewService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<SaveImage>();
 
             var app = builder.Build();

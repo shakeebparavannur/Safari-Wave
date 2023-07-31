@@ -20,7 +20,7 @@ public partial class Booking
     [NotMapped]
     public virtual ICollection<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
     [NotMapped]
-    public virtual ICollection<ConfirmedBooking> ConfirmedBookings { get; set; } = new List<ConfirmedBooking>();
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     [NotMapped]
     public virtual Package Package { get; set; } = null!;
     [NotMapped]

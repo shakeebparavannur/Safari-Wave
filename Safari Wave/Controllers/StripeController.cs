@@ -39,7 +39,8 @@ namespace Safari_Wave.Controllers
             PaymentIntentCreateOptions options = new ()
             {
                 Amount = (long?)totalamount,
-                Currency = "usd",
+                Currency = "inr",
+                
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
                 {
                     Enabled = true,

@@ -102,7 +102,7 @@ namespace Safari_Wave.Repository
             var bookingDto = _mapper.Map<BookingResponseIdDTO>(booking);
             return bookingDto;
         }
-
+        
         public async Task<IEnumerable<BookingResponseDTO>> GetBookings()
         {
             var bookings = await _context.Bookings.OrderBy(b => b.DateOfTrip).ToListAsync();

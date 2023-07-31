@@ -1,4 +1,6 @@
-﻿namespace Safari_Wave.Models.DTOs.Booking
+﻿using Safari_Wave.Models.DTOs.Users;
+
+namespace Safari_Wave.Models.DTOs.Booking
 {
     public class BookingResponseIdDTO
     {
@@ -13,7 +15,7 @@
         public string Payment { get; set; } = null!;
         public string? StripePaymentIntentId { get; set; }
         public string? ClientSecret { get; set; }
-        public virtual Package Package { get; set; } = null!;
-        public virtual UserDatum User { get; set; } = null!;
+        public virtual GetPackageDto Package { get; set; } = null!;
+        public virtual UserDTO User { get; set; } = null!;
     }
 }

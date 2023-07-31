@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Safari_Wave.Models;
 
@@ -11,9 +12,11 @@ using Safari_Wave.Models;
 namespace Safari_Wave.Migrations
 {
     [DbContext(typeof(SafariWaveContext))]
-    partial class SafariWaveContextModelSnapshot : ModelSnapshot
+    [Migration("20230731090722_OrderTableUpdated")]
+    partial class OrderTableUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,25 +180,18 @@ namespace Safari_Wave.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date_of_Trip")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("date");
-
-                    b.Property<string>("PaymentStatus")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("StripePaymentIntentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Confirmed_Booking", (string)null);
                 });
 
             modelBuilder.Entity("Safari_Wave.Models.Package", b =>

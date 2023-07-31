@@ -6,20 +6,19 @@ namespace Safari_Wave.Models;
 
 public partial class SafariWaveContext : DbContext
 {
-    public SafariWaveContext()
-    {
-    }
+   
 
     public SafariWaveContext(DbContextOptions<SafariWaveContext> options)
         : base(options)
     {
+
     }
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<Cancellation> Cancellations { get; set; }
 
-    public virtual DbSet<ConfirmedBooking> ConfirmedBookings { get; set; }
+    public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<Enquiry> Enquiries { get; set; }
 
@@ -83,16 +82,16 @@ public partial class SafariWaveContext : DbContext
                 .HasConstraintName("Cancellation_User_FK");
         });
 
-        modelBuilder.Entity<ConfirmedBooking>(entity =>
+        modelBuilder.Entity<Order>(entity =>
         {
-            entity.ToTable("Confirmed_Booking");
+            entity.ToTable("Order");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Amount).HasColumnType("money");
-            entity.Property(e => e.Date).HasColumnType("date");
+            entity.Property(e => e.Date_of_Trip).HasColumnType("date");
             entity.Property(e => e.Status).HasMaxLength(50);
 
-            entity.HasOne(d => d.Booking).WithMany(p => p.ConfirmedBookings)
+            entity.HasOne(d => d.Booking).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Booking_ConfirmBook");

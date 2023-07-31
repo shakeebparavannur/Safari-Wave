@@ -88,8 +88,8 @@ namespace Safari_Wave.Controllers
         }
         [Authorize]
         [HttpPut]
-        [Route("CancelOrder")]
-        public async Task<ActionResult> CancelYourOrder(int id)
+        [Route("CancelBooking")]
+        public async Task<ActionResult> CancelBooking(int id)
         {
             var user = HttpContext.User.Identity.Name;
             try

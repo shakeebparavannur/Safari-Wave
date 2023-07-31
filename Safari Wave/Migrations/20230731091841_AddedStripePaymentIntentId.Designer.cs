@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Safari_Wave.Models;
 
@@ -11,9 +12,11 @@ using Safari_Wave.Models;
 namespace Safari_Wave.Migrations
 {
     [DbContext(typeof(SafariWaveContext))]
-    partial class SafariWaveContextModelSnapshot : ModelSnapshot
+    [Migration("20230731091841_AddedStripePaymentIntentId")]
+    partial class AddedStripePaymentIntentId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,11 +180,8 @@ namespace Safari_Wave.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date_of_Trip")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("date");
-
-                    b.Property<string>("PaymentStatus")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasMaxLength(50)
