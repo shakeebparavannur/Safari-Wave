@@ -169,7 +169,10 @@ namespace Safari_Wave.Migrations
             modelBuilder.Entity("Safari_Wave.Models.Order", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("money");

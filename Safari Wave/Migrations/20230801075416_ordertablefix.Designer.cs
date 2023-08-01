@@ -12,8 +12,8 @@ using Safari_Wave.Models;
 namespace Safari_Wave.Migrations
 {
     [DbContext(typeof(SafariWaveContext))]
-    [Migration("20230724165436_stripeclientsecretkeyColumnAdded")]
-    partial class stripeclientsecretkeyColumnAdded
+    [Migration("20230801075416_ordertablefix")]
+    partial class ordertablefix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,31 +109,6 @@ namespace Safari_Wave.Migrations
                     b.ToTable("Cancellation", (string)null);
                 });
 
-            modelBuilder.Entity("Safari_Wave.Models.ConfirmedBooking", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("money");
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("Confirmed_Booking", (string)null);
-                });
-
             modelBuilder.Entity("Safari_Wave.Models.Enquiry", b =>
                 {
                     b.Property<int>("EnquiryId")
@@ -192,6 +167,41 @@ namespace Safari_Wave.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("Gallery", (string)null);
+                });
+
+            modelBuilder.Entity("Safari_Wave.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("money");
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date_of_Trip")
+                        .HasColumnType("date");
+
+                    b.Property<string>("PaymentStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("Safari_Wave.Models.Package", b =>
@@ -465,17 +475,6 @@ namespace Safari_Wave.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Safari_Wave.Models.ConfirmedBooking", b =>
-                {
-                    b.HasOne("Safari_Wave.Models.Booking", "Booking")
-                        .WithMany("ConfirmedBookings")
-                        .HasForeignKey("BookingId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Booking_ConfirmBook");
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("Safari_Wave.Models.Gallery", b =>
                 {
                     b.HasOne("Safari_Wave.Models.Package", "Package")
@@ -485,6 +484,17 @@ namespace Safari_Wave.Migrations
                         .HasConstraintName("FK_Gallery_Package");
 
                     b.Navigation("Package");
+                });
+
+            modelBuilder.Entity("Safari_Wave.Models.Order", b =>
+                {
+                    b.HasOne("Safari_Wave.Models.Booking", "Booking")
+                        .WithMany("Orders")
+                        .HasForeignKey("BookingId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Booking_ConfirmBook");
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Safari_Wave.Models.Review", b =>
@@ -540,7 +550,7 @@ namespace Safari_Wave.Migrations
                 {
                     b.Navigation("Cancellations");
 
-                    b.Navigation("ConfirmedBookings");
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Safari_Wave.Models.Package", b =>

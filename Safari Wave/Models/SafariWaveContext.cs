@@ -6,23 +6,24 @@ namespace Safari_Wave.Models;
 
 public partial class SafariWaveContext : DbContext
 {
-   
+    public SafariWaveContext()
+    {
+    }
 
     public SafariWaveContext(DbContextOptions<SafariWaveContext> options)
         : base(options)
     {
-
     }
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<Cancellation> Cancellations { get; set; }
 
-    public virtual DbSet<Order> Orders { get; set; }
-
     public virtual DbSet<Enquiry> Enquiries { get; set; }
 
     public virtual DbSet<Gallery> Galleries { get; set; }
+
+    public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<Package> Packages { get; set; }
 
@@ -34,7 +35,8 @@ public partial class SafariWaveContext : DbContext
 
     public virtual DbSet<UserDatum> UserData { get; set; }
 
-    
+ 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Booking>(entity =>
@@ -82,21 +84,6 @@ public partial class SafariWaveContext : DbContext
                 .HasConstraintName("Cancellation_User_FK");
         });
 
-        modelBuilder.Entity<Order>(entity =>
-        {
-            entity.ToTable("Order");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Amount).HasColumnType("money");
-            entity.Property(e => e.Date_of_Trip).HasColumnType("date");
-            entity.Property(e => e.Status).HasMaxLength(50);
-
-            entity.HasOne(d => d.Booking).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.BookingId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Booking_ConfirmBook");
-        });
-
         modelBuilder.Entity<Enquiry>(entity =>
         {
             entity.ToTable("Enquiry");
@@ -125,6 +112,24 @@ public partial class SafariWaveContext : DbContext
                 .HasForeignKey(d => d.PackageId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Gallery_Package");
+        });
+
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Confirmed_Booking");
+
+            entity.ToTable("Order");
+
+            entity.Property(e => e.Amount).HasColumnType("money");
+            entity.Property(e => e.DateOfTrip)
+                .HasColumnType("date")
+                .HasColumnName("Date_of_Trip");
+            entity.Property(e => e.Status).HasMaxLength(50);
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.BookingId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Booking_ConfirmBook");
         });
 
         modelBuilder.Entity<Package>(entity =>

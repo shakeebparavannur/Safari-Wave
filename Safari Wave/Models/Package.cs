@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Safari_Wave.Models;
 
@@ -43,12 +42,12 @@ public partial class Package
     public bool? IsAvailable { get; set; }
 
     public bool? IsFeatured { get; set; }
-    [NotMapped]
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-    [NotMapped]
+
     public virtual ICollection<Gallery> Galleries { get; set; } = new List<Gallery>();
-    [NotMapped]
+
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
-    [NotMapped]
+
     public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
 }
