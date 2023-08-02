@@ -48,7 +48,7 @@ namespace Safari_Wave.Controllers
             return Ok(package);
         }
 
-        [Authorize]
+        [Authorize(Roles ="admin")]
         [HttpPost]
         [Route("AddPackage")]
         public async Task<ActionResult>CreatePackage([FromForm] CreatePackageDto createPackageDto  )

@@ -17,7 +17,7 @@ namespace Safari_Wave.Controllers
         {
             this.orderService = orderService;
         }
-
+        [Authorize(Roles ="admin")]
         [HttpGet("Orders")]
         public async Task<IActionResult> GetAllOrders()
         {
