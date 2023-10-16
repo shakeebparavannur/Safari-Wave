@@ -130,6 +130,7 @@ namespace Safari_Wave.Repository
                 return null;
             }
             _mapper.Map(updatePackageDto , package);
+            
             await _context.SaveChangesAsync();
             var packageDto = _mapper.Map<GetPackageDto>(package);
             return packageDto;

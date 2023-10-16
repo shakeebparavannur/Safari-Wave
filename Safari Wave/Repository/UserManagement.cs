@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Safari_Wave.Models;
@@ -72,7 +73,7 @@ namespace Safari_Wave.Repository
                 _logger.LogError("UserName password mismatch");
                 return null;
             }
-            if (user.IsActive==false)
+            if (user.IsActive==false)   
             {
                 return null;
             }
@@ -160,7 +161,8 @@ namespace Safari_Wave.Repository
             {
                 if(userdata == null)
             {
-                return false;
+                throw new ArgumentNullException ("Sorry some thing went wrong, please register again");
+
             }
            
                 var isVerified = await _smsService.CheckVerification(phoneNumber, otp, userdata.VerificationSid);
@@ -211,6 +213,8 @@ namespace Safari_Wave.Repository
             };
             return loginResponseDTO;
         }
+
+        
     }
     
 }

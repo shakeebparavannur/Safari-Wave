@@ -30,6 +30,7 @@ namespace Safari_Wave.Repository
             {
                 UserId = username,
                 PackageId = booking.PackageId,
+                Date = DateTime.UtcNow,
                 DateOfTrip = booking.DateOfTrip,
                 NoOfPerson = booking.NoOfPerson,
                 Amount = amount,

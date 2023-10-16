@@ -16,6 +16,7 @@ namespace Safari_Wave.Controllers
         {
             _bookingSevice = bookingSevice;
         }
+        
         [HttpGet]
         public async Task<ActionResult> GetAllBooking()
         {
@@ -26,12 +27,13 @@ namespace Safari_Wave.Controllers
             }
             return Ok(bookings);
         }
+        
         [HttpPost("BookPackage")]
         [Authorize]
        
         public async Task<ActionResult> CreateBooking(CreateBookingDTO bookingData)
         {
-            var currentUser = HttpContext.User.Identity.Name;
+            var currentUser = HttpContext.User.Identity?.Name;
 
             var booking = await _bookingSevice.BookingPackage(currentUser, bookingData);
             if (booking == null)
